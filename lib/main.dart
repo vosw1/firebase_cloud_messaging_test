@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -6,12 +7,18 @@ import 'firebase_api.dart';
 import 'firebase_options.dart';
 
 final homeUrl = Uri.parse("https://www.example.com"); // 웹뷰에 로드할 URL 설정
+// 백그라운드에서 수신된 메시지를 처리하는 로직
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message: ${message.messageId}');
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter의 위젯 시스템 초기화
   await Firebase.initializeApp( // Firebase 초기화 (비동기 함수)
     options: DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 설정 적용
   );
+  // 백그라운드 메시지 핸들러 등록
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Firebase 알림 초기화 (필요한 경우)
   await FirebaseApi().initNotifications();
