@@ -1,132 +1,68 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'firebase_api.dart';
 import 'firebase_options.dart';
 
+final homeUrl = Uri.parse("https://www.example.com"); // 웹뷰에 로드할 URL 설정
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Flutter의 위젯 시스템을 초기화
-  await Firebase.initializeApp( // Firebase를 초기화하는 비동기 함수
-    options: DefaultFirebaseOptions.currentPlatform, // Firebase 설정을 현재 플랫폼에 맞게 적용
+  WidgetsFlutterBinding.ensureInitialized(); // Flutter의 위젯 시스템 초기화
+  await Firebase.initializeApp( // Firebase 초기화 (비동기 함수)
+    options: DefaultFirebaseOptions.currentPlatform, // 현재 플랫폼에 맞는 Firebase 설정 적용
   );
-  runApp(const MyApp());
+
+  // Firebase 알림 초기화 (필요한 경우)
+  await FirebaseApi().initNotifications();
+
+  runApp(const MyApp()); // MyApp 실행
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return GetMaterialApp(
+      title: 'Flutter Demo', // 앱의 제목 설정
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), // 앱의 테마 색상 설정
+        useMaterial3: true, // Material 3 사용 설정
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(), // 앱의 홈 화면으로 HomePage 위젯 설정
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState(); // 상태(State) 클래스 생성
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  late final WebViewController controller; // WebView 컨트롤러 선언
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController() // WebView 컨트롤러 초기화
+      ..setJavaScriptMode(JavaScriptMode.unrestricted) // 자바스크립트 허용 모드 설정
+      ..addJavaScriptChannel(
+        'Toaster', // 'Toaster'라는 이름의 JavaScript 채널 추가
+        onMessageReceived: (JavaScriptMessage msg) async {
+          // WebView의 자바스크립트에서 보낸 메시지를 처리하는 콜백 함수
+        },
+      )
+      ..loadRequest(homeUrl); // 설정된 URL 로드
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: WebViewWidget(controller: controller), // WebView를 표시할 위젯
     );
   }
 }
