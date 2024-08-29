@@ -1,6 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Flutter의 위젯 시스템을 초기화
+  await Firebase.initializeApp( // Firebase를 초기화하는 비동기 함수
+    options: DefaultFirebaseOptions.currentPlatform, // Firebase 설정을 현재 플랫폼에 맞게 적용
+  );
   runApp(const MyApp());
 }
 

@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "785593923875",
+    "project_id": "fcm-test-abfa1",
+    "storage_bucket": "fcm-test-abfa1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785593923875:android:7d0dbd7db3292e1d007496",
+        "android_client_info": {
+          "package_name": "com.example.fcm_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs2N1Ukgs_q0UJYL8iIgnint2fCA80aJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785593923875:android:93a7bf07c3cf8374007496",
+        "android_client_info": {
+          "package_name": "com.example.firebase_cloud_messaging_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs2N1Ukgs_q0UJYL8iIgnint2fCA80aJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785593923875:android:1dbd6c6c3ddbe44b007496",
+        "android_client_info": {
+          "package_name": "com.example.flutter_lab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs2N1Ukgs_q0UJYL8iIgnint2fCA80aJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
